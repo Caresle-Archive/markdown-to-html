@@ -9,25 +9,30 @@ window.addEventListener('load', () => {
 
 	const convertHeader = (text) => {
 		const regexp = new RegExp('#+ ')
-		const found = text.match(regexp)[0]
-		return textHeaderReturn(found, found.length - 1, text)
+		try {
+			const found = text.match(regexp)[0]
+			return textHeaderReturn(found, found.length - 1, text)
+		} catch (error) {
+			return undefined
+		}
 	}
 
 	const convertBold = (text) => {
-		console.log(`convert Bold ${text}`)
-		if (text.startsWith('**') && text.endsWith('**')) {
-			console.log(text.replace('**', '').split('**'))
-			const textContent = text.split('**')[1]
-			return `<p>
-				<strong>${textContent}</strong>
-				</p>`
-		}
-		if (text.startsWith('**')) {
-			const newText = text.replace('**', '').split('**')
-			return `<p>
-				<strong>${newText[0]}</strong> ${newText[1]}
-				</p>`
-		} 
+		const textReplaced = text.replaceAll('**', '<!<strong>')
+		const newText = textReplaced.split('<!')
+		let finalText = ''
+		let strong = 0
+		newText.forEach(element => {
+			if (element.startsWith('<strong>') && strong === 1) {
+				element = element.replace('<strong>', '</strong>')
+				strong = 0
+			}
+			if (element.startsWith('<strong>')) {
+				strong++
+			}
+			finalText += element
+		})
+		return finalText
 	}
 
 	const formCheck = (e) => {
@@ -41,19 +46,15 @@ window.addEventListener('load', () => {
 		})
 		let textToAdd = []
 		values.forEach(value => {
-			console.log('1')
 			textToAdd.push(convertHeader(value))
-			// textToAdd.push(convertBold(value))
+			textToAdd.push(convertBold(value))
 		})
-		console.log(textToAdd)
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		dataPreview.innerHTML = ''
 		textToAdd.forEach(text => {
 			dataPreview.innerHTML += text
 		})
 	}
-
-	
 
 	form.addEventListener('submit', formCheck)
 	
