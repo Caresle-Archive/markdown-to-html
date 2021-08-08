@@ -8,25 +8,9 @@ window.addEventListener('load', () => {
 	}
 
 	const convertHeader = (text) => {
-		if (text.startsWith('#')) {
-			if (text.startsWith('##')) {
-				if (text.startsWith('###')) {
-					if (text.startsWith('####')) {
-						if (text.startsWith('#####')) {
-							if (text.startsWith('######')) {
-								return textHeaderReturn('###### ', 6, text)
-							}
-							return textHeaderReturn('##### ', 5, text)
-						}
-						return textHeaderReturn('#### ', 4 , text)
-					}
-					return textHeaderReturn('### ', 3, text)
-				}
-				return textHeaderReturn('## ', 2, text)
-			}
-			
-			return textHeaderReturn('# ', 1, text)
-		}
+		const regexp = new RegExp('#+ ')
+		const found = text.match(regexp)[0]
+		return textHeaderReturn(found, found.length - 1, text)
 	}
 
 	const convertBold = (text) => {
@@ -57,9 +41,11 @@ window.addEventListener('load', () => {
 		})
 		let textToAdd = []
 		values.forEach(value => {
+			console.log('1')
 			textToAdd.push(convertHeader(value))
-			textToAdd.push(convertBold(value))
+			// textToAdd.push(convertBold(value))
 		})
+		console.log(textToAdd)
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		dataPreview.innerHTML = ''
 		textToAdd.forEach(text => {
