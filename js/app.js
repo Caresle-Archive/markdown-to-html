@@ -29,6 +29,23 @@ window.addEventListener('load', () => {
 		}
 	}
 
+	const convertBold = (text) => {
+		console.log(`convert Bold ${text}`)
+		if (text.startsWith('**') && text.endsWith('**')) {
+			console.log(text.replace('**', '').split('**'))
+			const textContent = text.split('**')[1]
+			return `<p>
+				<strong>${textContent}</strong>
+				</p>`
+		}
+		if (text.startsWith('**')) {
+			const newText = text.replace('**', '').split('**')
+			return `<p>
+				<strong>${newText[0]}</strong> ${newText[1]}
+				</p>`
+		} 
+	}
+
 	const formCheck = (e) => {
 		e.preventDefault()
 		const dataPreview = document.getElementById('data-preview')
@@ -38,10 +55,10 @@ window.addEventListener('load', () => {
 				values = child.value.split('\n')
 			}
 		})
-
 		let textToAdd = []
 		values.forEach(value => {
 			textToAdd.push(convertHeader(value))
+			textToAdd.push(convertBold(value))
 		})
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		dataPreview.innerHTML = ''
