@@ -18,6 +18,7 @@ window.addEventListener('load', () => {
 	}
 
 	const convertBold = (text) => {
+		if (text.startsWith('#')) return undefined
 		const textReplaced = text.replaceAll('**', '<!<strong>')
 		const newText = textReplaced.split('<!')
 		let finalText = ''
@@ -35,6 +36,11 @@ window.addEventListener('load', () => {
 		return finalText
 	}
 
+	const convert = (arr, textConvert) => {
+		arr.push(convertHeader(textConvert))
+		arr.push(convertBold(textConvert))
+	}
+
 	const formCheck = (e) => {
 		e.preventDefault()
 		const dataPreview = document.getElementById('data-preview')
@@ -46,8 +52,7 @@ window.addEventListener('load', () => {
 		})
 		let textToAdd = []
 		values.forEach(value => {
-			textToAdd.push(convertHeader(value))
-			textToAdd.push(convertBold(value))
+			convert(textToAdd, value)
 		})
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		dataPreview.innerHTML = ''
@@ -55,7 +60,6 @@ window.addEventListener('load', () => {
 			dataPreview.innerHTML += text
 		})
 	}
-
 	form.addEventListener('submit', formCheck)
 	
 	
