@@ -1,0 +1,9 @@
+html, body {
+	margin: 0;
+}
+
+#data-preview {
+	overflow: scroll;
+	height: 40vh;
+	border: 1px solid black;
+}

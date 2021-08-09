@@ -19,6 +19,7 @@ window.addEventListener('load', () => {
 
 	const convertBold = (text) => {
 		if (text.startsWith('#')) return undefined
+		if (text.startsWith('>')) return undefined
 		const textReplaced = text.replaceAll('**', '<!<strong>')
 		const newText = textReplaced.split('<!')
 		let finalText = ''
@@ -42,10 +43,19 @@ window.addEventListener('load', () => {
 		}
 	}
 
+	const convertBlockquote = (text) => {
+		if (text.startsWith('>')) {
+			text = text.replace('>', '')
+			text = convertBold(text)
+			return `<blockquote>${text}</blockquote>`
+		}
+	}
+
 	const convert = (arr, textConvert) => {
 		arr.push(convertHeader(textConvert))
 		arr.push(convertBold(textConvert))
 		arr.push(convertBreakLine(textConvert))
+		arr.push(convertBlockquote(textConvert))
 	}
 
 	const formCheck = (e) => {
