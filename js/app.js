@@ -36,9 +36,16 @@ window.addEventListener('load', () => {
 		return finalText
 	}
 
+	const convertBreakLine = (text) => {
+		if (text === '') {
+			return `<br>`
+		}
+	}
+
 	const convert = (arr, textConvert) => {
 		arr.push(convertHeader(textConvert))
 		arr.push(convertBold(textConvert))
+		arr.push(convertBreakLine(textConvert))
 	}
 
 	const formCheck = (e) => {
