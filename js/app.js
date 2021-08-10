@@ -23,18 +23,51 @@ window.addEventListener('load', () => {
 		const textReplaced = text.replaceAll('**', '<!<strong>')
 		const newText = textReplaced.split('<!')
 		let finalText = ''
-		let strong = 0
-		newText.forEach(element => {
-			if (element.startsWith('<strong>') && strong === 1) {
-				element = element.replace('<strong>', '</strong>')
-				strong = 0
-			}
-			if (element.startsWith('<strong>')) {
-				strong++
-			}
-			finalText += element
-		})
+		finalText = changeEndTag(newText, finalText, '<strong>', '</strong>')
 		return finalText
+	}
+
+	const convertItalic = (text) => {
+		if (text.startsWith('#')) return undefined
+		if (text.startsWith('>')) return undefined
+		if (text.match(/[0-9]./)) return undefined
+		if (text.startsWith('**')) return undefined
+		const textReplaced = text.replaceAll('*', '<!<em>')
+		const newText = textReplaced.split('<!')
+		let finalText = ''
+		
+		finalText = changeEndTag(newText, finalText, '<em>', '</em>')
+		return finalText
+	}
+
+	const cleanItalic = (arr) => {
+		let index = []
+		arr.forEach((element, ind) => {
+			if (element.includes('*')) {
+				index.push(ind)
+			}
+		})
+
+		index = index.reverse()
+		index.forEach((element) => {
+			arr.splice(element, 1)
+		})
+		
+	}
+
+	const changeEndTag = (arr, textToConcat, tagOpen, tagClose) => {
+		let number = 0
+		arr.forEach(element => {
+			if (element.startsWith(tagOpen) && number === 1) {
+				element = element.replace(tagOpen, tagClose)
+				number = 0
+			}
+			if (element.startsWith(tagOpen)) {
+				number++
+			}
+			textToConcat += element
+		})
+		return textToConcat
 	}
 
 	const convertBreakLine = (text) => {
@@ -95,6 +128,7 @@ window.addEventListener('load', () => {
 	const convert = (arr, textConvert) => {
 		arr.push(convertHeader(textConvert))
 		arr.push(convertBold(textConvert))
+		arr.push(convertItalic(textConvert))
 		arr.push(convertBreakLine(textConvert))
 		arr.push(convertBlockquote(textConvert))
 		arr.push(convertOrderedList(arr, textConvert))
@@ -115,6 +149,7 @@ window.addEventListener('load', () => {
 		})
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		convertOrderedList2(textToAdd)
+		cleanItalic(textToAdd)
 		dataPreview.innerHTML = ''
 		textToAdd.forEach(text => {
 			dataPreview.innerHTML += text
