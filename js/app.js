@@ -120,9 +120,13 @@ window.addEventListener('load', () => {
 			}
 			arr[index[0]] += arr[val]
 		})
-		for(let i = index.length - 1; i >= 1; i--) {
+		for(let i = index.length - 1; i >= 0; i--) {
 			arr.splice(index[i], 1)
 		}
+	}
+
+	const convertUnorderedList = (arr, text) => {
+
 	}
 
 	const convert = (arr, textConvert) => {
