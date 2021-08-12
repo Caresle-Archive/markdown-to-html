@@ -8,9 +8,9 @@ window.addEventListener('load', () => {
 	}
 
 	const convertHeader = (text) => {
-		const regexp = new RegExp('#+ ')
+		const regex = new RegExp('#+ ')
 		try {
-			const found = text.match(regexp)[0]
+			const found = text.match(regex)[0]
 			return textHeaderReturn(found, found.length - 1, text)
 		} catch (error) {
 			return undefined
@@ -27,11 +27,17 @@ window.addEventListener('load', () => {
 		return finalText
 	}
 
+
+
 	const convertItalic = (text) => {
 		if (text.startsWith('#')) return undefined
 		if (text.startsWith('>')) return undefined
 		if (text.match(/[0-9]./)) return undefined
-		if (text.startsWith('**')) return undefined
+		const regex = /\*{1}\w+\*{1}/
+		const regex2 = /\*{2}\w+\*{2}/
+		if (text.match(regex2)) {
+			console.log(text.slice(text.search(regex2)))
+		}
 		const textReplaced = text.replaceAll('*', '<!<em>')
 		const newText = textReplaced.split('<!')
 		let finalText = ''
@@ -85,13 +91,13 @@ window.addEventListener('load', () => {
 	}
 
 	const convertOrderedList = (arr, text) => {
-		const regexp = /[0-9]./
-		if (text.match(regexp)) {
-			const newText = text.split(regexp)[1]
+		const regex = /[0-9]+\./
+		if (text.match(regex)) {
+			const newText = text.split(regex)[1]
 			const indToPop = []
 			arr.map((val, ind) => {
 				if (val !== undefined) {
-					if (val.match(regexp) && !val.search(/<h[0-9]>/) === false) {
+					if (val.match(regex) && (!val.search(/<h[0-9]>/) === false)) {
 						indToPop.push(ind)
 					}
 				}
@@ -120,19 +126,17 @@ window.addEventListener('load', () => {
 			}
 			arr[index[0]] += arr[val]
 		})
-		for(let i = index.length - 1; i >= 0; i--) {
+
+		for(let i = index.length - 1; i >= 1; i--) {
 			arr.splice(index[i], 1)
 		}
 	}
 
-	const convertUnorderedList = (arr, text) => {
-
-	}
 
 	const convert = (arr, textConvert) => {
 		arr.push(convertHeader(textConvert))
 		arr.push(convertBold(textConvert))
-		arr.push(convertItalic(textConvert))
+		// arr.push(convertItalic(textConvert))
 		arr.push(convertBreakLine(textConvert))
 		arr.push(convertBlockquote(textConvert))
 		arr.push(convertOrderedList(arr, textConvert))
@@ -153,7 +157,7 @@ window.addEventListener('load', () => {
 		})
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		convertOrderedList2(textToAdd)
-		cleanItalic(textToAdd)
+		// cleanItalic(textToAdd)
 		dataPreview.innerHTML = ''
 		textToAdd.forEach(text => {
 			dataPreview.innerHTML += text
