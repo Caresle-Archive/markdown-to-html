@@ -111,24 +111,60 @@ window.addEventListener('load', () => {
 
 	const convertOrderedList2 = (arr) => {
 		let index = []
+		let indexBeginList = []
+		let indexZero = 0
+		let lastInd = 0
+		let addIndexZero = false
 		arr.forEach((element, ind) => {
 			if (element.startsWith('<li>')) {
 				index.push(ind)
 			}
 		})
+
+		// Index to create the begin of the list
 		index.forEach((val, ind) => {
 			if (ind === 0) {
+				return
+			}
+			if (index[lastInd] + 1 !== val) {
+				indexBeginList.push(val)
+			}
+			lastInd = ind
+		})
+
+		index.forEach((val, ind) => {
+			if (ind === 0 || ind === indexZero) {
 				arr[val] = `<ol>${arr[val]}`
 				return
 			}
-			if (ind === index.length - 1) {
-				arr[val] = `${arr[val]}</ol>`
-			}
-			arr[index[0]] += arr[val]
-		})
 
+			indexBeginList.forEach((element) => {
+				if (element === index[ind + 1]) {
+					arr[val] = `${arr[val]}</ol>`
+					addIndexZero = true
+				}
+			})
+			arr[index[indexZero]] += arr[val]
+
+			if (addIndexZero) {
+				indexZero = ind + 1
+				addIndexZero = false
+			}
+		})
+		
 		for(let i = index.length - 1; i >= 1; i--) {
-			arr.splice(index[i], 1)
+			let skipSplice = false
+			indexBeginList.forEach(e => {
+				if (index[i] === e) {
+					skipSplice = true
+				}
+			})
+			if (skipSplice) {
+				skipSplice = false
+				continue
+			} else {
+				arr.splice(index[i], 1)
+			}
 		}
 	}
 
