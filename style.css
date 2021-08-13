@@ -74,8 +74,12 @@ blockquote {
 }
 
 strong {
-	color: var(--dark);
+	color: red;
 	font-weight: 500;
+}
+
+em {
+	color: yellowgreen;
 }
 
 @media only screen and (min-width: 800px) {

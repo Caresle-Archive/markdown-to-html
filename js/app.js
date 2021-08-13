@@ -24,10 +24,12 @@ window.addEventListener('load', () => {
 		const newText = textReplaced.split('<!')
 		let finalText = ''
 		finalText = changeEndTag(newText, finalText, '<strong>', '</strong>')
+		if (finalText !== '') {
+			finalText = `<p>${finalText}</p>`
+		}
+		console.log(finalText)
 		return finalText
 	}
-
-
 
 	const convertItalic = (text) => {
 		if (text.startsWith('#')) return undefined
@@ -167,7 +169,6 @@ window.addEventListener('load', () => {
 			}
 		}
 	}
-
 
 	const convert = (arr, textConvert) => {
 		arr.push(convertHeader(textConvert))
