@@ -27,40 +27,23 @@ window.addEventListener('load', () => {
 		if (finalText !== '') {
 			finalText = `<p>${finalText}</p>`
 		}
-		console.log(finalText)
 		return finalText
 	}
 
-	const convertItalic = (text) => {
-		if (text.startsWith('#')) return undefined
-		if (text.startsWith('>')) return undefined
-		if (text.match(/[0-9]./)) return undefined
+	const convertItalic = (arr) => {
+		const cleanArr = arr.filter(item => item !== undefined)
 		const regex = /\*{1}\w+\*{1}/
-		const regex2 = /\*{2}\w+\*{2}/
-		if (text.match(regex2)) {
-			console.log(text.slice(text.search(regex2)))
-		}
-		const textReplaced = text.replaceAll('*', '<!<em>')
-		const newText = textReplaced.split('<!')
-		let finalText = ''
-		
-		finalText = changeEndTag(newText, finalText, '<em>', '</em>')
-		return finalText
-	}
-
-	const cleanItalic = (arr) => {
-		let index = []
-		arr.forEach((element, ind) => {
+		const newArray = cleanArr.map(element => {
 			if (element.includes('*')) {
-				index.push(ind)
+				element = element.replace(regex, (text) => {
+					text = text.replace('*', '<em>')
+					text = text.replace('*', '</em>')
+					return text
+				})
 			}
+			return element
 		})
-
-		index = index.reverse()
-		index.forEach((element) => {
-			arr.splice(element, 1)
-		})
-		
+		return newArray
 	}
 
 	const changeEndTag = (arr, textToConcat, tagOpen, tagClose) => {
@@ -173,7 +156,6 @@ window.addEventListener('load', () => {
 	const convert = (arr, textConvert) => {
 		arr.push(convertHeader(textConvert))
 		arr.push(convertBold(textConvert))
-		// arr.push(convertItalic(textConvert))
 		arr.push(convertBreakLine(textConvert))
 		arr.push(convertBlockquote(textConvert))
 		arr.push(convertOrderedList(arr, textConvert))
@@ -194,7 +176,7 @@ window.addEventListener('load', () => {
 		})
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		convertOrderedList2(textToAdd)
-		// cleanItalic(textToAdd)
+		textToAdd = convertItalic(textToAdd)
 		dataPreview.innerHTML = ''
 		textToAdd.forEach(text => {
 			dataPreview.innerHTML += text

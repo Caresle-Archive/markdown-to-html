@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
 :root {
-	--dark: #1c2027;
+	--dark: #111213;
 	--soft-dark: #393E46;
 	--primary: #4ECCA3;
 	--gray: #EEEEEE;
@@ -74,13 +74,10 @@ blockquote {
 }
 
 strong {
-	color: red;
+	color: var(--dark);
 	font-weight: 500;
 }
 
-em {
-	color: yellowgreen;
-}
 
 @media only screen and (min-width: 800px) {
 	.container {
