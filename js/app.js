@@ -1,6 +1,20 @@
 window.addEventListener('load', () => {
 	const form = document.getElementById('form-markdown')
+	const getHTMLButton = document.getElementById('get-html')
+	const theme = document.getElementById('theme')
 	
+	theme.addEventListener('click', () => {
+		if (document.body.className.includes('light')) {
+			document.body.classList.replace('light', 'dark')
+		} else {
+			document.body.classList.replace('dark', 'light')
+		}
+	})
+	
+	getHTMLButton.addEventListener('click', () => {
+		console.log('html button')
+	})
+
 	const textHeaderReturn = (split, size, text) => {
 		const textContent = text.split(split)[1]
 		const textReturn = `<h${size}>${textContent}</h${size}>`
@@ -153,12 +167,94 @@ window.addEventListener('load', () => {
 		}
 	}
 
+	const convertUnorderedList = (arr, text) => {
+		const regex = /\-+ /
+		if (text.match(regex)) {
+			const newText = text.split(regex)[1]
+			const indToPop = []
+			arr.map((val, ind) => {
+				if (val !== undefined) {
+					if (val.match(regex) && (!val.search(/<h[0-9]>/) === false)) {
+						indToPop.push(ind)
+					}
+				}
+			})
+			indToPop.forEach(element => {
+				arr.splice(element, 1)
+			})
+			return `<uli>${newText}</li>`
+		}
+	}
+
+	const convertUnorderedList2 = (arr) => {
+		let index = []
+		let indexBeginList = []
+		let indexZero = 0
+		let lastInd = 0
+		let addIndexZero = false
+		arr.forEach((element, ind) => {
+			if (element.startsWith('<uli>')) {
+				index.push(ind)
+			}
+		})
+
+		index.forEach((val, ind) => {
+			if (ind === 0) {
+				return
+			}
+			if (index[lastInd] + 1 !== val) {
+				indexBeginList.push(val)
+			}
+			lastInd = ind
+		})
+
+		index.forEach((val, ind) => {
+			if (arr[val].startsWith('<uli>')) {
+				arr[val] = arr[val].replace('<uli>', '<li>')
+			}
+
+			if (ind === 0 || ind === indexZero) {
+				arr[val] = `<ul>${arr[val]}`
+				return
+			}
+
+			indexBeginList.forEach((element) => {
+				if (element === index[ind + 1]) {
+					arr[val] = `${arr[val]}</ul>`
+					addIndexZero = true
+				}
+			})
+			arr[index[indexZero]] += arr[val]
+
+			if (addIndexZero) {
+				indexZero = ind + 1
+				addIndexZero = false
+			}
+		})
+		
+		for(let i = index.length - 1; i >= 1; i--) {
+			let skipSplice = false
+			indexBeginList.forEach(e => {
+				if (index[i] === e) {
+					skipSplice = true
+				}
+			})
+			if (skipSplice) {
+				skipSplice = false
+				continue
+			} else {
+				arr.splice(index[i], 1)
+			}
+		}
+	}
+
 	const convert = (arr, textConvert) => {
 		arr.push(convertHeader(textConvert))
 		arr.push(convertBold(textConvert))
 		arr.push(convertBreakLine(textConvert))
 		arr.push(convertBlockquote(textConvert))
 		arr.push(convertOrderedList(arr, textConvert))
+		arr.push(convertUnorderedList(arr, textConvert))
 	}
 
 	const formCheck = (e) => {
@@ -176,6 +272,7 @@ window.addEventListener('load', () => {
 		})
 		textToAdd = textToAdd.filter(text => text !== undefined)
 		convertOrderedList2(textToAdd)
+		convertUnorderedList2(textToAdd)
 		textToAdd = convertItalic(textToAdd)
 		dataPreview.innerHTML = ''
 		textToAdd.forEach(text => {

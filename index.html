@@ -7,7 +7,9 @@
 	<title>Markdown</title>
 	<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="light">
+	<div id="theme" class="circle">
+	</div>
 	<main class="container">
 		<div class="markdown-container">
 			<h1 class="text--center">Markdown to HTML</h1>
@@ -15,6 +17,7 @@
 				<label class="text--center" for="markdown_text">Markdown</label>
 				<textarea wrap="soft" class="textarea-desktop" name="markdown_text" cols="30" rows="10"></textarea>
 				<button class="btn btn-primary" type="submit">Convert</button>
+				<button id="get-html" class="btn btn-outline" type="button">Copy HTML</button>
 			</form>
 		</div>
 		<div id="data-preview">

@@ -3,9 +3,28 @@
 :root {
 	--dark: #111213;
 	--soft-dark: #393E46;
-	--primary: #4ECCA3;
+	--green: #4ECCA3;
 	--gray: #EEEEEE;
 	--white: #fff;
+	--yellow: #FFD523;
+	--dark-theme: #2C2E43;
+}
+
+
+.light {
+	--text-color-dark: var(--dark);
+	--text-color: var(--soft-dark);
+	--bg-color: var(--white);
+	--primary: var(--green);
+	--btn-text-color: var(--gray);
+}
+
+.dark {
+	--text-color-dark: var(--white);
+	--text-color: var(--gray);
+	--bg-color: var(--dark-theme);
+	--primary: var(--yellow);
+	--btn-text-color: var(--dark-theme);
 }
 
 * {
@@ -15,9 +34,11 @@
 }
 
 html, body {
+	background: var(--bg-color);
 	margin: 0;
 	font-size: 16px;
-	color: var(--soft-dark);
+	transition: background 100ms ease-out;
+	color: var(--text-color);
 }
 
 .container {
@@ -27,13 +48,13 @@ html, body {
 }
 
 #data-preview {
-	color: var(--soft-dark);
+	color: var(--text-color);
 	overflow: scroll;
 	height: 40vh;
 	width: 95%;
 	margin: 0 auto;
 	padding: .5rem;
-	border-left: 1px solid var(--soft-dark);
+	border-left: 1px solid var(--text-color);
 }
 
 .markdown-container {
@@ -54,27 +75,68 @@ html, body {
 
 .btn {
 	padding: 1rem;
+	width: 90%;
+	border-radius: 8px;
+	font-size: 1.25rem;
 	border: 1px solid var(--white);
+}
+
+.btn-outline {
+	background: var(--bg-color);
+	border: 1px solid var(--primary);
+	color: var(--primary);
+	margin: .25rem auto;
+	transition: background 100ms ease-in, filter 50ms ease-out;
+}
+
+.btn-outline:hover {
+	background: var(--primary);
+	color: var(--btn-text-color);
+	cursor: pointer;
+	font-size: 1.30rem;
+	filter: contrast(150%);
 }
 
 .btn-primary {
 	background-color: var(--primary);
 	border: 1px solid var(--primary);
-	color: var(--gray);
-	font-size: 1.25rem;
-	width: 90%;
+	color: var(--btn-text-color);
 	margin: .5rem auto;
-	border-radius: 8px;
+	transition: filter 50ms ease-out;
+}
+
+.btn-primary:hover {
+	cursor: pointer;
+	filter: contrast(150%);
+}
+
+.circle {
+	background-color: var(--bg-color);
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 4px solid var(--text-color-dark);
+}
+
+.circle:hover {
+	cursor: pointer;
+}
+
+textarea {
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	border: 1px solid var(--primary);
+	border-radius: 4px;
 }
 
 blockquote {
 	background-color: var(--gray);
-	color: var(--soft-dark);
+	color: var(--text-color);
 	padding: 1rem;
 }
 
 strong {
-	color: var(--dark);
+	color: var(--text-color-dark);
 	font-weight: 500;
 }
 
@@ -83,7 +145,7 @@ strong {
 	.container {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
-		grid-template-rows: 95vh;
+		grid-template-rows: 90vh;
 	}
 
 	.textarea-desktop {
