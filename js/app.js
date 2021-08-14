@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
 	const form = document.getElementById('form-markdown')
 	const getHTMLButton = document.getElementById('get-html')
 	const theme = document.getElementById('theme')
+	const dataPreview = document.getElementById('data-preview')
 	
 	theme.addEventListener('click', () => {
 		if (document.body.className.includes('light')) {
@@ -10,9 +11,12 @@ window.addEventListener('load', () => {
 			document.body.classList.replace('dark', 'light')
 		}
 	})
-	
+
 	getHTMLButton.addEventListener('click', () => {
-		console.log('html button')
+		let text = dataPreview.innerHTML
+		text = `<textarea class="textarea-desktop">${text}</textarea>`
+		dataPreview.innerHTML = ''
+		dataPreview.innerHTML = text
 	})
 
 	const textHeaderReturn = (split, size, text) => {
@@ -259,7 +263,6 @@ window.addEventListener('load', () => {
 
 	const formCheck = (e) => {
 		e.preventDefault()
-		const dataPreview = document.getElementById('data-preview')
 		let values = []
 		form.childNodes.forEach(child => {
 			if (child.tagName === 'TEXTAREA') {
